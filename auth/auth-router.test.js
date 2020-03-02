@@ -8,8 +8,8 @@ describe('auth router', () => {
     expect(true).toBe(true);
   });
 
-  beforeAll(async () => {
-    await db.seed.run();
+  beforeAll(() => {
+    return db.seed.run();
   });
 
   describe('POST /api/register', () => {
