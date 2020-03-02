@@ -1,6 +1,6 @@
 # Pintereach API
 
-## http://pintereach1.herokuapp.com
+http://pintereach1.herokuapp.com
 
 ### Endpoints
 
