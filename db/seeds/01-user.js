@@ -5,7 +5,7 @@ const hash2 = bcrypt.hashSync(process.env.USER_2, 12);
 
 exports.seed = function(knex) {
   return knex('user').insert([
-    { id: 1, username: 'lily', password: hash1, email: 'lily@gmail.com' },
-    { id: 2, username: 'aaron', password: hash2, email: 'aaron@gmail.com' },
+    { username: 'lily', password: hash1, email: 'lily@gmail.com' },
+    { username: 'aaron', password: hash2, email: 'aaron@gmail.com' },
   ]);
 };
