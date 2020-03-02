@@ -8,6 +8,9 @@
     "start": "node index.js",
     "test": "cross-env DB_ENV=testing jest --watch --verbose"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Build-Week-Pintereach1/backend.git"
