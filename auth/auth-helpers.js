@@ -18,7 +18,9 @@ function generateToken(user) {
 // middleware
 
 function validateUserInfo(req, res, next) {
-  if (!req.body.username || !req.body.password || !req.body.email) {
+  if (!req.body.username || !req.body.password) {
+    res.status(400).json({ message: 'Missing required fields.' })
+  } else if (!req.body.email && req.path.toLowerCase().includes('register')) {
     res.status(400).json({ message: 'Missing required fields.' })
   } else {
     next();

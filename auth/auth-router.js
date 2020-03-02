@@ -23,7 +23,7 @@ router.post('/register', validateUserInfo, async (req, res) => {
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', validateUserInfo, async (req, res) => {
   const { username, password } = req.body;
 
   try {
