@@ -39,4 +39,30 @@ describe('auth router', () => {
       expect(res.status).toBe(400);
     });
   });
+
+  describe('POST /api/auth/login', () => {
+    it('should return 200 OK', async () => {
+        const res = await request(server).post('/api/login').send({
+        username: 'lily',
+        password: process.env.USER_1
+      });
+      expect(res.status).toBe(200);
+    });
+
+    it('should return a token', async () => {
+      const res = await request(server).post('/api/login').send({
+        username: 'aaron',
+        password: process.env.USER_2
+      });
+      expect(typeof res.body.token === 'string').toBe(true);
+    });
+
+    it('should return 400 Unauthorized if password incorrect', async () => {
+      const res = await request(server).post('/api/login').send({
+        username: 'lily',
+        password: 'wrongpassword',
+      });
+      expect(res.status).toBe(401);
+    });
+  });
 });
