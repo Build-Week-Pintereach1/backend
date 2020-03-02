@@ -57,6 +57,14 @@ describe('auth router', () => {
       expect(typeof res.body.token === 'string').toBe(true);
     });
 
+    it('should return 400 Bad Request if username omitted', async () => {
+      const res = await request(server).post('/api/login').send({
+        username: '',
+        password: 'esther',
+      });
+      expect(res.status).toBe(400);
+    });
+
     it('should return 400 Unauthorized if password incorrect', async () => {
       const res = await request(server).post('/api/login').send({
         username: 'lily',
