@@ -2,7 +2,7 @@ const db = require('../db/db-config.js');
 
 function getBy(filter) {
   return db('article')
-    .where(filter)
+    .where(filter);
 }
 
 function add(article) {

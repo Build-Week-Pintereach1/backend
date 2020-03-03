@@ -55,7 +55,7 @@ router.put('/:id', validateArticleId, validateAccess, async (req, res) => {
     }
   }
   catch ({ message, stack }) {
-    res.status(500).json({ message, stack });
+    res.status(500).json({ error: 'Failed to update article.', message, stack });
   }
 });
 
@@ -91,7 +91,7 @@ function validateAccess(req, res, next) {
 }
 
 function validateArticleInfo(req, res, next) {
-  if (!req.body.url) {
+  if (!req.body || !req.body.url) {
     res.status(400).json({ message: 'Missing required field: url.' });
   } else {
     next();
