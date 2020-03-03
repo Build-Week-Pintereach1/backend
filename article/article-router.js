@@ -38,7 +38,7 @@ router.post('/', validateArticleInfo, async (req, res) => {
 
     req.body.user_id = req.auth_id;
     await Article.add(req.body);
-    send.article = await Article.getBy({ user_id: req.auth_id });
+    send.articles = await Article.getDetails(req.auth_id);
 
     res.status(200).json(send);
   }
