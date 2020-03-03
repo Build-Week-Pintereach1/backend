@@ -11,7 +11,22 @@ function add(article) {
     .returning('*');
 }
 
+function update(id, changes) {
+  return db('article')
+    .where({ id })
+    .update(changes)
+    .returning('*');
+}
+
+function remove(id) {
+  return db('article')
+    .where({ id })
+    .del();
+}
+
 module.exports = {
   getBy,
-  add
+  add,
+  update,
+  remove
 };
