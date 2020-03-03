@@ -2,7 +2,7 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 
 const User = require('../user/user-model.js');
-const { validateUserInfo, generateToken } = require('./auth-helpers.js');
+const { validateUserInfo, generateToken, verifyToken } = require('./auth-helpers.js');
 
 router.post('/register', validateUserInfo, async (req, res) => {
   let user = req.body;
@@ -19,7 +19,7 @@ router.post('/register', validateUserInfo, async (req, res) => {
     });
   }
   catch ({ message, stack }) {
-    res.status(500).json({error: 'Registration failed.', message, stack });
+    res.status(500).json({ error: 'Registration failed.', message, stack });
   }
 });
 
@@ -34,6 +34,7 @@ router.post('/login', validateUserInfo, async (req, res) => {
 
       res.status(200).json({
         message: `Welcome, ${user.username}!`,
+        user,
         token
       });
     } else {
@@ -42,6 +43,22 @@ router.post('/login', validateUserInfo, async (req, res) => {
   }
   catch ({ message, stack }) {
     res.status(500).json({ error: 'Login failed.', message, stack });
+  }
+});
+
+router.get('/validate', async (req, res) => {
+  const { authorization } = req.headers;
+
+  if (!authorization) {
+    res.status(400).json({ message: 'Token was not provided.' })
+  } else {
+    try {
+      await verifyToken(authorization);
+      res.status(200).json({ validToken: true, message: 'Valid token.' });
+    }
+    catch(err) {
+      res.status(401).json({ validToken: false, message: 'Invalid token.' });
+    }
   }
 });
 

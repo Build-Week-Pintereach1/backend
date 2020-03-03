@@ -44,8 +44,13 @@ function restricted(req, res, next) {
   }
 }
 
+function verifyToken(authorization) {
+  return jwt.verify(authorization, jwtSecret);
+}
+
 module.exports = {
   generateToken,
   validateUserInfo,
-  restricted
+  restricted,
+  verifyToken
 };

@@ -73,4 +73,15 @@ describe('auth router', () => {
       expect(res.status).toBe(401);
     });
   });
+
+  describe('POST /api/validate', () => {
+    it('should return validToken: true for valid token', async () => {
+      const { body } = await request(server).post('/api/login').send({
+        username: 'lily',
+        password: process.env.USER_1
+      });
+      const res = await request(server).get('/api/validate').set('Authorization', body.token);
+      expect(res.body.validToken).toBe(true);
+    });
+  });
 });
