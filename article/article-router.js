@@ -63,7 +63,7 @@ router.put('/:id', validateArticleId, validateAccess, async (req, res) => {
 router.delete('/:id', validateArticleId, validateAccess, async (req, res) => {
   try {
     await Article.remove(req.params.id);
-    res.status(200).json(await Article.getBy({ user_id: req.auth_id }));
+    res.status(200).json(await Article.getDetails(req.auth_id));
   }
   catch ({ message, stack }) {
     res.status(500).json({ error: 'Failed to remove article.', message, stack });
