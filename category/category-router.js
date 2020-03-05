@@ -1,7 +1,6 @@
 const router = require('express').Router();
 
 const Category = require('./category-model.js');
-const { validateArticleId } = require('../article/article-helpers.js');
 
 router.get('/', async (req, res) => {
   try {
@@ -92,6 +91,28 @@ function validateCategoryInfo(req, res, next) {
     res.status(400).json({ message: 'Missing required field for category: name.' });
   } else {
     next();
+  }
+}
+
+function validateArticleIdPathCategory(req, res, next) {
+  if (req.method === 'POST') { 
+    return Article.getBy({ id: req.body.article_id }).first().then(article => {
+      if (!article) {
+        res.status(404).json({ message: 'Article with the specified id was not found.' });
+      } else {
+        req.article = article;
+        next();
+      }
+    });
+  } else {
+    return Article.getBy({ id: req.query.artid }).first().then(article => {
+      if (!article) {
+        res.status(404).json({ message: 'Article with the specified id was not found.' });
+      } else {
+        req.article = article;
+        next();
+      }
+    });
   }
 }
 

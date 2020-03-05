@@ -84,7 +84,7 @@ describe("article router", () => {
         .delete("/api/articles/4")
         .set("Authorization", `${token}`);
       expect(res.status).toBe(200);
-      expect(res.body.filter(article => article.id === 3).length).toBe(0);
+      expect(res.body.filter(article => article.id === 4).length).toBe(0);
     });
   });
 });
