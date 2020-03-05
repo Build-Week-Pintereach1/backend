@@ -1,87 +1,90 @@
-// const request = require('supertest');
+const request = require("supertest");
 
-// const server = require('../api/server.js');
-// const db = require('../db/db-config.js');
+const server = require("../api/server.js");
+const db = require("../db/db-config.js");
 
-// describe('article router', () => {
-//   it('should run the tests', () => {
-//     expect(true).toBe(true);
-//   });
+describe("article router", () => {
+  it("should run the tests", () => {
+    expect(true).toBe(true);
+  });
 
-//   beforeAll(() => {
-//     return db.seed.run();
-//   });
+  let token;
 
-//   describe('GET /api/articles', () => {
-//     it('should return 201 Created', async () => {
-//       const res = await request(server).post('/api/register').send({
-//         username: 'moo',
-//         password: 'cow',
-//         email: 'moo@gmail.com'
-//       });
-//       expect(res.status).toBe(201);
-//     });
+  beforeAll(() => {
+    request(server)
+      .post("/api/login")
+      .send({
+        username: "lily",
+        password: process.env.USER_1
+      })
+      .end((err, res) => {
+        token = res.body.token;
+      });
 
-//     it('should return a token', async () => {
-//       const res = await request(server).post('/api/register').send({
-//         username: 'sillymander',
-//         password: 'oliver',
-//         email: 'sillymander@gmail.com'
-//       });
-//       expect(typeof res.body.token === 'string').toBe(true);
-//     });
+    return db.seed.run();
+  });
 
-//     it('should return 400 Bad Request if email omitted', async () => {
-//       const res = await request(server).post('/api/register').send({
-//         username: 'drongo',
-//         password: 'esther',
-//       });
-//       expect(res.status).toBe(400);
-//     });
-//   });
+  describe("GET /api/articles", () => {
+    it("should return an array of articles which have categories", async () => {
+      const res = await request(server)
+        .get("/api/articles")
+        .set("Authorization", `${token}`);
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body[0].categories)).toBe(true);
+    });
+  });
 
-//   describe('POST /api/auth/login', () => {
-//     it('should return 200 OK', async () => {
-//         const res = await request(server).post('/api/login').send({
-//         username: 'lily',
-//         password: process.env.USER_1
-//       });
-//       expect(res.status).toBe(200);
-//     });
+  describe("GET /api/articles/:id", () => {
+    it("should return 200 OK", async () => {
+      const res = await request(server)
+        .get("/api/articles/1")
+        .set("Authorization", `${token}`);
+      expect(res.status).toBe(200);
+    });
 
-//     it('should return a token', async () => {
-//       const res = await request(server).post('/api/login').send({
-//         username: 'aaron',
-//         password: process.env.USER_2
-//       });
-//       expect(typeof res.body.token === 'string').toBe(true);
-//     });
+    it("should return article where id: 1", async () => {
+      const res = await request(server)
+        .get("/api/articles/1")
+        .set("Authorization", `${token}`);
+      expect(res.body.title).toBe(
+        "Seed Knex PostgreSQL Database with JSON Data"
+      );
+    });
+  });
 
-//     it('should return 400 Bad Request if username omitted', async () => {
-//       const res = await request(server).post('/api/login').send({
-//         username: '',
-//         password: 'esther',
-//       });
-//       expect(res.status).toBe(400);
-//     });
+  describe("POST /api/articles", () => {
+    it("should return an article with fields populated by LinkPreview", async () => {
+      const res = await request(server)
+        .post("/api/articles")
+        .send({
+          url: "https://www.google.com"
+        })
+        .set("Authorization", `${token}`);
+      expect(res.status).toBe(201);
+      expect(typeof res.body.articles[4] === "object").toBe(true);
+    });
+  });
 
-//     it('should return 400 Unauthorized if password incorrect', async () => {
-//       const res = await request(server).post('/api/login').send({
-//         username: 'lily',
-//         password: 'wrongpassword',
-//       });
-//       expect(res.status).toBe(401);
-//     });
-//   });
+  describe("PUT /api/articles/:id", () => {
+    it("should return updated article", async () => {
+      const res = await request(server)
+        .put("/api/articles/2")
+        .send({
+          notes: "Will read this tomorrow"
+        })
+        .set("Authorization", `${token}`);
+      expect(res.status).toBe(200);
+      expect(res.body.notes).toBe("Will read this tomorrow");
+    });
+  });
 
-//   describe('POST /api/validate', () => {
-//     it('should return validToken: true for valid token', async () => {
-//       const { body } = await request(server).post('/api/login').send({
-//         username: 'lily',
-//         password: process.env.USER_1
-//       });
-//       const res = await request(server).get('/api/validate').set('Authorization', body.token);
-//       expect(res.body.validToken).toBe(true);
-//     });
-//   });
-// });
+  describe("DELETE /api/articles/:id", () => {
+    it("returned articles should not include saved article", async () => {
+      const res = await request(server)
+        .delete("/api/articles/4")
+        .set("Authorization", `${token}`);
+      expect(res.status).toBe(200);
+      expect(res.body.filter(article => article.id === 3).length).toBe(0);
+    });
+  });
+});

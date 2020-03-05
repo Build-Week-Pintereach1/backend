@@ -11,9 +11,9 @@ https://pintereach1.herokuapp.com
 | GET    | /api/validate                | Verify token                        |
 | GET    | /api/articles                | Retrieve saved articles             |
 | GET    | /api/articles/:id            | Retrieve article by id              |
-| POST   | /api/articles/                | Save article                        |
-| PUT    | /api/articles/:id                | Edit saved article                  |
-| DELETE | /api/articles/:id                | Remove saved article                |
+| POST   | /api/articles/               | Save article                        |
+| PUT    | /api/articles/:id            | Edit saved article                  |
+| DELETE | /api/articles/:id            | Remove saved article                |
 | GET    | /api/categories              | Retrieve categories                 |
 | POST   | /api/categories              | Add category                        |
 | GET    | /api/categories/:id/articles | Retrieve articles within a category |
@@ -106,6 +106,16 @@ Use the PUT /api/articles/:id endpoint to change an article's `board_id` propert
 **Example Response**
 
 ```js
+{
+    "id": 2,
+    "url": "https://www.javascriptstuff.com/component-communication",
+    "title": "8 no-Flux strategies for React component communication",
+    "image": "https://www.javascriptstuff.com/static/parent-to-child-fc4c68730b003da3f9d20dd57cf52d20-8aa1a.png",
+    "description": "Sending data between React components can seem like a pain at first. Here are some simple strategies.",
+    "notes": null,
+    "board_id": 1,
+    "user_id": 1
+}
 ```
 
 ## POST /api/articles/:id
@@ -136,9 +146,9 @@ Use the PUT /api/articles/:id endpoint to change an article's `board_id` propert
 **Body**
 
 ```js
-```
-
-```js
+{
+    "notes": "I better take notes on this!"
+}
 ```
 
 ## DELETE /api/articles
