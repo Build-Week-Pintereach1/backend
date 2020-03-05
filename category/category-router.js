@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 const Category = require('./category-model.js');
+const Article = require('../article/article-model.js')
 
 router.get('/', async (req, res) => {
   try {
