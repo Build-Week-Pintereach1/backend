@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 const Category = require('./category-model.js');
+const Article = require('../article/article-model.js')
 
 router.get('/', async (req, res) => {
   try {
@@ -94,7 +95,7 @@ function validateCategoryInfo(req, res, next) {
   }
 }
 
-function validateArticleIdPathCategory(req, res, next) {
+function validateArticleId(req, res, next) {
   if (req.method === 'POST') { 
     return Article.getBy({ id: req.body.article_id }).first().then(article => {
       if (!article) {
