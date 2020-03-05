@@ -42,7 +42,7 @@ describe('auth router', () => {
 
   describe('POST /api/auth/login', () => {
     it('should return 200 OK', async () => {
-        const res = await request(server).post('/api/login').send({
+      const res = await request(server).post('/api/login').send({
         username: 'lily',
         password: process.env.USER_1
       });

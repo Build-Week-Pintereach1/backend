@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', validateArticleId, validateAccess, async (req, res) => {
   try {
-    res.status(200).json(await Article.getBy({ id: req.params.id }));
+    res.status(200).json(await Article.getBy({ id: req.params.id }).first());
   }
   catch ({ message, stack }) {
     res.status(500).json({ error: 'Failed to get article by id.', message, stack });
@@ -40,7 +40,7 @@ router.post('/', validateArticleInfo, async (req, res) => {
     await Article.add(req.body);
     send.articles = await Article.getDetails(req.auth_id);
 
-    res.status(200).json(send);
+    res.status(201).json(send);
   }
   catch ({ message, stack }) {
     res.status(500).json({ error: 'Failed to save article.', message, stack });
@@ -52,7 +52,8 @@ router.put('/:id', validateArticleId, validateAccess, async (req, res) => {
     if (!req.body) {
       res.status(400).json({ message: 'No changes were provided.' })
     } else {
-      res.status(200).json(await Article.update(req.params.id, req.body));
+      const [article] = await Article.update(req.params.id, req.body);
+      res.status(200).json(article);
     }
   }
   catch ({ message, stack }) {
