@@ -94,7 +94,7 @@ function validateCategoryInfo(req, res, next) {
   }
 }
 
-function validateArticleIdPathCategory(req, res, next) {
+function validateArticleId(req, res, next) {
   if (req.method === 'POST') { 
     return Article.getBy({ id: req.body.article_id }).first().then(article => {
       if (!article) {
